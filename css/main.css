@@ -96,3 +96,54 @@ footer{
     gap: 30px;
     list-style: none;
 }
+/*task1 */
+
+
+.header-items-task1{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.back-link{
+    font-size: 18px;
+    text-decoration: none;
+    color: white;
+    background-color: black;
+    padding: 10px 10px;
+    transition: 0.3s;
+}
+.back-link:hover{
+    filter: invert();
+}
+.task1-items{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 100px
+}
+.task1-data{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+.task1-items {
+    border: 1px solid black;
+    padding: 100px 0;
+}
+.task1-input {
+    border: 1px solid black;
+}
+.task1-button{
+    padding: 30px 50px;
+    background-color: black;
+    border: 1px solid black;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.task1-button:hover{
+    color: black;
+    background-color: white;
+}
