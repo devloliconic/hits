@@ -1,10 +1,11 @@
-const SIZE = 50;
+const SIZE = 10;
 const PAD = 5;
 const WALL_COLOR = "black";
 const CELL_COLOR = "white";
 const BACGROUND_COLOR = "gray";
 
-
+const canvas = document.querySelector("canvas");
+const context = canvas.getContext("2d");
 
 
 document.getElementById("mybutton").onclick = click;
@@ -12,15 +13,23 @@ document.getElementById("mybutton").onclick = click;
 function click(){
     //get input 
     let a = Number(document.getElementById("myinput").value);
-    return a;
+    console.log(a);
+    const COLUMNS = a;
+    const ROWS = a;   
+    canvas.width = PAD * 2 + COLUMNS * SIZE;
+    canvas.height = PAD * 2 + ROWS  * SIZE;
+
+    context.beginPath();
+    context.rect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = BACGROUND_COLOR;
+    context.fill();
+
 }
 
-const COLUMNS = click();
-const ROWS = click();
 
 
-const canvas = document.querySelector("canvas");
-const context = canvas.getContext("2d");
+
+
 
 
 
@@ -30,7 +39,7 @@ const eraser = {
 };
 
 
-drawMaze();
+
 
 function getMatrix(columns, rows) {
     const matrix = [];
@@ -45,7 +54,7 @@ function getMatrix(columns, rows) {
     return matrix;
 }
 
-function drawMaze() {
+/*function drawMaze() {
     canvas.width = PAD * 2 + COLUMNS * SIZE;
     canvas.height = PAD * 2 + ROWS  * SIZE;
 
@@ -55,3 +64,4 @@ function drawMaze() {
     context.fill();
 
 }
+*/
