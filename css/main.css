@@ -148,7 +148,12 @@ footer{
 .task1-items{
     text-align: center;
 }
-
+#mycanvas{
+    border: 1px solid black;
+}
+.task2-data{
+    margin-bottom: 10px;
+}
 /*.canvas{*/
 /*    width: 500px;*/
 /*    height: 500px;*/
