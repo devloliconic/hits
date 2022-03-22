@@ -48,10 +48,11 @@ function addCentroid(){
     return centroidarry
 }
 console.log(coardDot)
-console.log(centroidarry[0]);
+console.log(centroidarry);
 document.getElementById("startButton").onclick = buildCluster;
 function buildCluster(){ 
     for(let coard of coardDot){
+        console.log(coard.x)
         let chekGreenX = centroidarry[0] - coard.x;
         let chekGreenY = centroidarry[1] - coard.y;
         let chekRedX = centroidarry[2] - coard.x;
@@ -60,10 +61,10 @@ function buildCluster(){
         vectorModulRed = Math.abs(vectorModulRed);
         let vectorModulGreen = Math.pow((Math.pow(chekGreenX,2)+Math.pow(chekGreenY,2)),0.5);
         vectorModulGreen = Math.abs(vectorModulGreen);
-        if(vectorModulRed <= vectorModulGreen){
+        if(vectorModulRed >= vectorModulGreen){
             greenBox.push(coard);
         }
-        else if(vectorModulRed > vectorModulGreen) {
+        else if(vectorModulRed < vectorModulGreen) {
             redBox.push(coard);
         }
     }
