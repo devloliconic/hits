@@ -135,6 +135,7 @@ function avgCoard(){
     ctx.fill();
     greenBox = [];
     redBox = [];
+    coardAll = [];
     console.log(centroidarry);
     buildCluster();
 } 
