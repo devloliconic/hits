@@ -53,10 +53,10 @@ document.getElementById("startButton").onclick = buildCluster;
 function buildCluster(){ 
     for(let coard of coardDot){
         console.log(coard.x)
-        let chekGreenX = centroidarry[0] - coard.x;
-        let chekGreenY = centroidarry[1] - coard.y;
-        let chekRedX = centroidarry[2] - coard.x;
-        let chekRedY = centroidarry[3] - coard.y;
+        let chekGreenX = coard.x - centroidarry[0];
+        let chekGreenY = coard.y - centroidarry[1];
+        let chekRedX = coard.x- centroidarry[2];
+        let chekRedY = coard.y - centroidarry[3];
         let vectorModulRed = Math.pow((Math.pow(chekRedY,2)+Math.pow(chekRedY,2)),0.5);
         vectorModulRed = Math.abs(vectorModulRed);
         let vectorModulGreen = Math.pow((Math.pow(chekGreenX,2)+Math.pow(chekGreenY,2)),0.5);
