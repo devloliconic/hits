@@ -119,24 +119,29 @@ function avgCoard(){
     }
     sredY = sumY/redBox.length;
     coardAll.push(sredY);
-    ctx.clearRect(centroidarry[0], centroidarry[1], 500, 500);
-    ctx.clearRect(centroidarry[2], centroidarry[3], 500, 500);
-    centroidarry[0] = coardAll[0];
-    centroidarry[1] = coardAll[1];
-    centroidarry[2] = coardAll[2];
-    centroidarry[3] = coardAll[3];
-    ctx.fillStyle = "green";
-    ctx.beginPath();
-    ctx.fillRect(centroidarry[0], centroidarry[1], 20, 20);
-    ctx.fill();
-    ctx.fillStyle = "red";
-    ctx.beginPath();
-    ctx.fillRect(centroidarry[2], centroidarry[3], 20, 20);
-    ctx.fill();
-    greenBox = [];
-    redBox = [];
-    coardAll = [];
-    console.log(centroidarry);
-    buildCluster();
+    if((centroidarry[0] == coardAll[0])&&(centroidarry[1] == coardAll[1])&&(centroidarry[2] == coardAll[2])&&(centroidarry[3] == coardAll[3])){
+        alert("done");
+    }
+    else{
+        ctx.clearRect(centroidarry[0], centroidarry[1], 500, 500);
+        ctx.clearRect(centroidarry[2], centroidarry[3], 500, 500);
+        centroidarry[0] = coardAll[0];
+        centroidarry[1] = coardAll[1];
+        centroidarry[2] = coardAll[2];
+        centroidarry[3] = coardAll[3];
+        ctx.fillStyle = "green";
+        ctx.beginPath();
+        ctx.fillRect(centroidarry[0], centroidarry[1], 20, 20);
+        ctx.fill();
+        ctx.fillStyle = "red";
+        ctx.beginPath();
+        ctx.fillRect(centroidarry[2], centroidarry[3], 20, 20);
+        ctx.fill();
+        greenBox = [];
+        redBox = [];
+        coardAll = [];
+        console.log(centroidarry);
+        buildCluster();
+    }
 } 
 console.log(centroidarry);
