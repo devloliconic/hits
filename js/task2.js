@@ -99,24 +99,20 @@ function avgCoard(){
     let sredY = 0;
     for(let i = 0; i < greenBox.length; i++){
         sumX = greenBox[i].x + sumX;
+        sumY = greenBox[i].y + sumY;
     }
     sredX = sumX/greenBox.length;
     coardAll.push(sredX);
-    for(let i = 0; i < greenBox.length; i++){
-        sumY = greenBox[i].y + sumY;
-    }
     sredY = sumY/greenBox.length;
     coardAll.push(sredY);
     sumY = 0;
     sumX = 0;
     for(let i = 0; i < redBox.length; i++){
         sumX = redBox[i].x + sumX;
+        sumY = redBox[i].y + sumY;
     }
     sredX = sumX/redBox.length;
     coardAll.push(sredX);
-    for(let i = 0; i < redBox.length; i++){
-        sumY = redBox[i].y + sumY;
-    }
     sredY = sumY/redBox.length;
     coardAll.push(sredY);
     if((centroidarry[0] == coardAll[0])&&(centroidarry[1] == coardAll[1])&&(centroidarry[2] == coardAll[2])&&(centroidarry[3] == coardAll[3])){
@@ -125,10 +121,9 @@ function avgCoard(){
     else{
         ctx.clearRect(centroidarry[0], centroidarry[1], 500, 500);
         ctx.clearRect(centroidarry[2], centroidarry[3], 500, 500);
-        centroidarry[0] = coardAll[0];
-        centroidarry[1] = coardAll[1];
-        centroidarry[2] = coardAll[2];
-        centroidarry[3] = coardAll[3];
+        for(let i = 0; i < centroidarry.length; i++){
+            centroidarry[i] = coardAll[i];
+        }
         ctx.fillStyle = "green";
         ctx.beginPath();
         ctx.fillRect(centroidarry[0], centroidarry[1], 20, 20);
