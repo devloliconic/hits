@@ -1,8 +1,6 @@
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 
-document.getElementById("mybutton").onclick = generateMap;
-
 let sizeNode;
 let matrix;
 let n;
@@ -10,16 +8,29 @@ let beginCell = [-1, -1]
 let endCell = [-1, -1]
 let typeOfClick = 0; // 0 - place walls, 1 - begin cell, 2 - end cell
 
-document.getElementById("alg").onclick = function() { A_star(beginCell, endCell) };
+const checkBox = document.getElementById("checkBox");
+
+document.getElementById("map").onclick = generateMap;
+document.getElementById("generateMaze").onclick = function() {maze(beginCell, endCell)};
+document.getElementById("alg").onclick = function() {A_star(beginCell, endCell)};
+
+let slider = document.getElementById("myinput");
+let output = document.getElementById("value");
+output.innerHTML = slider.value;
+
+slider.oninput = function() {
+    output.innerHTML = this.value;
+}
 
 function generateMap(){
     n = Number(document.getElementById("myinput").value);//get input
-
     console.log(n);
     context.clearRect(0, 0, 500, 500);
     context.beginPath();
-    sizeNode = Math.floor(500/n);
-    matrix = getMatrix(n);
+    //sizeNode = Math.floor(500/n);
+    sizeNode = 500 / n;
+    matrix = getMatrix(n, 0);
+    console.log(sizeNode)
 
     let x = 0;
     let y = 0;
@@ -42,11 +53,83 @@ function generateMap(){
     document.getElementById("walls").onclick = function (){typeOfClick = 0;};
 }
 
+function maze(start, end = [-1, -1]){
+    if (JSON.stringify(start) === JSON.stringify([-1, -1])){
+        alert("Установите начальную клетку!");
+        return;
+    }
+
+    let visited = getMatrix(n, 0);
+    let unVisitedCells = n * n;
+
+    for (let i = 0; i < n; ++i){
+        for (let j = 0; j < n; ++j){
+            if (!((i === start[0] && j === start[1])|| (i === end[0] && j === end[1]))){//
+                matrix[i][j] = 1;
+                context.fillStyle="#000000";
+                context.fillRect(j * sizeNode, i * sizeNode, sizeNode, sizeNode);
+            }
+        }
+    }
+
+    let stack = [];
+    let current = start;
+    visited[current[0]][current[1]] = 1;
+
+    while (unVisitedCells){
+        let neighbours = [];
+
+        let curX = current[0];
+        let curY = current[1];
+        if (curX + 2 < n && !visited[curX + 2][curY]){
+            neighbours.push([curX + 2, curY]);
+        }
+        if (curY + 2 < n && !visited[curX][curY + 2]){
+            neighbours.push([curX, curY + 2]);
+        }
+        if (curX - 2 >= 0 && !visited[curX - 2][curY]){
+            neighbours.push([curX - 2, curY]);
+        }
+        if (curY - 2 >= 0 && !visited[curX][curY - 2]){
+            neighbours.push([curX, curY - 2]);
+        }
+
+        if (neighbours.length){
+            stack.push(current);
+            let currentNeighbour = neighbours[Math.floor(Math.random() * neighbours.length)];
+            let differenceX = (currentNeighbour[0] - curX) / 2;
+            let differenceY = (currentNeighbour[1] - curY) / 2;
+
+            matrix[currentNeighbour[0]][currentNeighbour[1]] = 0;
+            matrix[curX + differenceX][curY + differenceY] = 0;
+            context.fillStyle="#ffffff";
+            context.fillRect(currentNeighbour[1] * sizeNode + 0.5, currentNeighbour[0] * sizeNode + 0.5, sizeNode - 1, sizeNode - 1);
+            context.fillRect((curY + differenceY) * sizeNode + 0.5,(curX + differenceX) * sizeNode + 0.5,  sizeNode - 1, sizeNode - 1);
+            visited[currentNeighbour[0]][currentNeighbour[1]] = 1;
+            unVisitedCells--;
+            current = currentNeighbour;
+        }
+        else{
+            if (stack.length){
+                current = stack.shift();
+            }
+            else break;
+        }
+    }
+
+    if (end[0] !== -1 && end[1] !== -1){
+        context.fillStyle="#ff0216";
+        context.fillRect(end[1] * sizeNode + 0.5, end[0] * sizeNode + 0.5, sizeNode - 1, sizeNode - 1);
+    }
+}
+
 function mouseClick(e){
     let clientX = e.pageX - e.target.offsetLeft;
     let clientY = e.pageY - e.target.offsetTop;
+
     let i = Math.floor(clientX / sizeNode);
     let j = Math.floor(clientY / sizeNode);
+
     console.log(`x:${clientX}, y:${clientY}`, i, j);
     let cellX = i * sizeNode;
     let cellY = j * sizeNode;
@@ -84,6 +167,12 @@ function mouseClick(e){
                 context.fillRect(cellX + 0.5, cellY + 0.5, sizeNode - 1, sizeNode - 1);
             }
 
+            if (JSON.stringify([j, i]) === JSON.stringify(endCell)){
+                context.fillStyle="#ffffff";
+                context.fillRect(endCell[1] * sizeNode + 0.5, endCell[0] * sizeNode + 0.5, sizeNode - 1, sizeNode - 1);
+                endCell = [-1, -1];
+            }
+
             context.fillStyle="#0cfa00";
             context.fillRect(cellX + 0.5, cellY + 0.5, sizeNode - 1, sizeNode - 1);
             beginCell[0] = j;
@@ -91,15 +180,24 @@ function mouseClick(e){
             break;
 
         case 2:
+            console.log(matrix[j][i]);
             if (JSON.stringify(endCell) !== JSON.stringify([-1, -1])){
                 context.fillStyle="#ffffff";
-                context.fillRect(endCell[0] * sizeNode + 0.5, endCell[1] * sizeNode + 0.5, sizeNode - 1, sizeNode - 1);
+                context.fillRect(endCell[1] * sizeNode + 0.5, endCell[0] * sizeNode + 0.5, sizeNode - 1, sizeNode - 1);
             }
+
             if (matrix[j][i]){
                 matrix[j][i] = 0;
                 context.fillStyle="#ffffff";
                 context.fillRect(cellX + 0.5, cellY + 0.5, sizeNode - 1, sizeNode - 1);
             }
+
+            if (JSON.stringify([j, i]) === JSON.stringify(beginCell)){
+                context.fillStyle="#ffffff";
+                context.fillRect(beginCell[1] * sizeNode + 0.5, beginCell[0] * sizeNode + 0.5, sizeNode - 1, sizeNode - 1);
+                beginCell = [-1, -1];
+            }
+
             context.fillStyle="#ff0216";
             context.fillRect(cellX + 0.5, cellY + 0.5, sizeNode - 1, sizeNode - 1);
             endCell[0] = j;
@@ -109,14 +207,14 @@ function mouseClick(e){
 
 }
 
-function getMatrix(n) {
+function getMatrix(n, fill) {
     let matrix = new Array(n);
     for (let i = 0; i < n; i++) {
         matrix[i] = new Array(n);
     }
     for (let i = 0; i < n; ++i){
         for (let j = 0; j < n; ++j){
-            matrix[i][j] = 0;
+            matrix[i][j] = fill;
         }
     }
     return matrix;
@@ -124,14 +222,6 @@ function getMatrix(n) {
 
 function PriorityQueue() { // input: [[x, y], priority]
     let array = [];
-
-    this.print = function() {
-        let outPut = "";
-        for (let i = 0; i < array.length; ++i){
-            outPut += array[i][0][0] + " " + array[i][0][1] + " " + array[i][1] + "   ";
-        }
-        console.log(outPut);
-    }
 
     this.enqueue = function(element) {
         if (this.isEmpty()) {
@@ -155,10 +245,6 @@ function PriorityQueue() { // input: [[x, y], priority]
         return array.shift();
     }
 
-    this.front = function() {
-        return array[0];
-    }
-
     this.isEmpty = function() {
         return array.length === 0;
     }
@@ -168,12 +254,16 @@ function PriorityQueue() { // input: [[x, y], priority]
     }
 }
 
-function heuristicFunc(current, end){
-    return 2 * Math.sqrt(Math.pow(current[0] - end[0], 2) + Math.pow(current[1] - end[1], 2));
-    //return Math.abs(current[0] - end[0]) + Math.abs(current[1] - end[1]);
+function heuristicFunc(current, end, type){
+    if (type){
+        return 2 * Math.sqrt(Math.pow(current[0] - end[0], 2) + Math.pow(current[1] - end[1], 2));
+    }
+    else{
+        return 2 * Math.abs(current[0] - end[0]) + Math.abs(current[1] - end[1]);
+    }
 }
 
-function unVisitedNeighbours(current, costTo){
+function unVisitedNeighbours(current, matrix, costTo){
     let neighbours = [];
     let curX = current[0];
     let curY = current[1];
@@ -197,6 +287,7 @@ function wait(time){
 }
 
 async function A_star(start, end){
+    let typeOfHeuristic = checkBox.checked;
     if (JSON.stringify(start) === JSON.stringify([-1, -1])){
         alert("Установите начальную клетку!");
         return;
@@ -206,18 +297,10 @@ async function A_star(start, end){
         alert("Установите конечную клетку!");
         return;
     }
-    console.log(start, end)
-    let queue = new PriorityQueue();
-    let costTo = new Array(n);
 
-    for (let i = 0; i < n; i++) {
-        costTo[i] = new Array(n);
-    }
-    for (let i = 0; i < n; ++i){
-        for (let j = 0; j < n; ++j){
-            costTo[i][j] = -1;
-        }
-    }
+    let queue = new PriorityQueue();
+    let costTo = getMatrix(n, -1);
+
     costTo[start[0]][start[1]] = 0;
 
     let parent = new Array(n);
@@ -231,51 +314,42 @@ async function A_star(start, end){
             parent[i][j][1] = -1;
         }
     }
-    queue.enqueue([start, heuristicFunc(start, end)])
+
+    queue.enqueue([start, heuristicFunc(start, end, typeOfHeuristic)])
     while (!queue.isEmpty()){
         let current = queue.dequeue()
         let curX = current[0][0];
         let curY = current[0][1];
         if (curX === end[0] && curY === end[1]){
-            // parent[end[0]][end[1]][0] = curX;
-            // parent[end[0]][end[1]][1] = curY;
             console.log(current[0][0], current[0][1])
             break;
         }
 
-        let neighbours = unVisitedNeighbours([curX, curY], costTo);
+        let neighbours = unVisitedNeighbours([curX, curY], matrix, costTo);
         for (let i = 0; i < neighbours.length; ++i){
             let currentNeighbour = neighbours[i];
             let currentNeighbourX = neighbours[i][0];
             let currentNeighbourY = neighbours[i][1];
 
-            await wait(150);
+            await wait(100);
             context.fillStyle = "#FFC567FF";
             context.fillRect(currentNeighbourY * sizeNode + 1, currentNeighbourX * sizeNode + 1, sizeNode - 2, sizeNode - 2);
 
             if (costTo[currentNeighbourX][currentNeighbourY] === -1 || costTo[curX][curY] + 1 < costTo[currentNeighbourX][currentNeighbourY]){
                 parent[currentNeighbourX][currentNeighbourY][0] = curX;
                 parent[currentNeighbourX][currentNeighbourY][1] = curY;
-                console.log(curX, curY, currentNeighbourX, currentNeighbourY + " !!!!")
                 costTo[currentNeighbourX][currentNeighbourY] = costTo[curX][curY] + 1;
-                queue.enqueue([currentNeighbour, costTo[currentNeighbourX][currentNeighbourY] + heuristicFunc(currentNeighbour, end)])
+                queue.enqueue([currentNeighbour, costTo[currentNeighbourX][currentNeighbourY] + heuristicFunc(currentNeighbour, end, typeOfHeuristic)])
             }
         }
 
     }
 
-    let output = "";
-    for (let i = 0; i < n; ++i){
-        for (let j = 0; j < n; ++j){
-            output += "[" + parent[i][j] + "]" + " ";
-        }
-        output += "\n"
-    }
-    console.log(output)
-
     if (JSON.stringify(parent[end[0]][end[1]]) !== JSON.stringify([-1, -1])){
         let current = parent[end[0]][end[1]];
+        let counter = 0;
         while (current[0] !== -1 && current[1] !== -1){
+            counter++;
             context.fillStyle = "#06d9fd";
             context.fillRect(current[1] * sizeNode + 0.5, current[0] * sizeNode + 0.5, sizeNode - 1, sizeNode - 1);
             current = parent[current[0]][current[1]];
@@ -285,6 +359,9 @@ async function A_star(start, end){
         context.fillRect(end[1] * sizeNode + 0.5, end[0] * sizeNode + 0.5, sizeNode - 1, sizeNode - 1);
         context.fillStyle="#0cfa00";
         context.fillRect(start[1] * sizeNode + 0.5, start[0] * sizeNode + 0.5, sizeNode - 1, sizeNode - 1);
+
+        counter--;
+        alert("Длина пути = " + counter)
     }
     else{
         alert("НЕТ ПУТИ :(")

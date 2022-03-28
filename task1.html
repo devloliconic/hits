@@ -27,15 +27,25 @@
             <div class="main">
                 <div class="task1-items">
                     <div class="task1-data">
-                        <input id="myinput" class="task1-input" type="number" placeholder="Введите значение" max="300">
-                        <button id="mybutton" class ="task1-button">generate map/clear map</button>
+                        <div class="slidercontainer">
+                            <input type="range" min="2" max="50" value="25" class="slider" id="myinput">
+                            <p>Value: <span id="value"></span></p>
+                        </div>
+                        <!--<input id="myinput" class="task1-input" type="number" placeholder="Введите значение" max="300">-->
+                        <button id="map" class ="task1-button">generate/clear map</button>
+                        <button id="generateMaze" class ="task1-button">generate maze</button>
                         <button id="walls" class ="task1-button">place the walls</button>
                         <button id="beginCell" class ="task1-button">place the start cell</button>
                         <button id="endCell" class ="task1-button">place the end cell</button>
                         <button id="alg" class ="task1-button">running the algorithm</button>
-                        
-                        
-                        
+                    </div>
+                    <div class="switcher_block">
+                        <p>Манхэттенское<br>расстояние</p>
+                        <label class="switch">
+                            <input type="checkbox" id="checkBox">
+                            <span class="slider_round"></span>
+                        </label>
+                        <p>Евклидово<br>расстояние</p>
                     </div>
                     <canvas class="canvas" width="500" height="500"></canvas>
                     <script src="js/maze.js"></script>
