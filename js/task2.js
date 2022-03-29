@@ -1,26 +1,40 @@
 var canvas = document.getElementById('mycanvas');
 var ctx = canvas.getContext('2d');
 let coardDot = [];
-let greenBox = [];
-let redBox = [];
 let centroidarry = [];
-// let coardArrGreen =[];
-// let coardArrRed = [];
 let coardAll = [];
-var floagForPoint = true;
+let allvector = [];
+let clusters = [];
+const collorCentroid = ['red', 'green', 'gold', 'blue', 'DimGray'];
+
+
+
+let slider = document.getElementById("myinput");
+let output = document.getElementById("value");
+output.innerHTML = slider.value;
+
+slider.oninput = function() {
+    output.innerHTML = this.value;
+}
+
+
 
 canvas.onclick = function (event) {
     if (floagForPoint === true){
-        var x = event.offsetX;
-        var y = event.offsetY;
-        coardDot.push({x,y});
+        let x = event.offsetX;
+        let y = event.offsetY;
+        let dot = {
+            dotx: x,
+            doty: y
+        }
+        coardDot.push(dot);
         ctx.fillStyle = "black";
         ctx.beginPath();
         ctx.arc(x,y,10,0,2*Math.PI);
         ctx.stroke();
         ctx.fill();
     }
-  return coardDot
+  return coardDot;
 }
 
 document.getElementById("clearButton").onclick = clearFunc;
@@ -29,114 +43,108 @@ document.getElementById("addCentroidButton").onclick = addCentroid;
 function clearFunc(){
     location.reload();
 }
+let floagForPoint = true;
 let flagLimitedCentroid = true // limited for 
 function addCentroid(){
-    if(flagLimitedCentroid == true){
-        ctx.fillStyle = "green";
-        ctx.beginPath();
-        greenX = Math.ceil(Math.random()*500);
-        greenY = Math.ceil(Math.random()*500);
-        ctx.fillRect(greenX, greenY, 20, 20);
-        centroidarry.push(greenX,greenY);
-        ctx.fill();
-        redX = Math.ceil(Math.random()*500);
-        redY = Math.ceil(Math.random()*500);
-        centroidarry.push(redX,redY);
-        ctx.fillStyle = "red";
-        ctx.beginPath();
-        ctx.fillRect(redX, redY, 20, 20);
-      //  ctx.stroke();
-        ctx.fill();
-    }
-    flagLimitedCentroid = false;
-    floagForPoint = false;
-    return centroidarry;
-}
-// console.log(coardDot)
-// console.log(centroidarry);
-document.getElementById("startButton").onclick = buildCluster;
-function buildCluster(){ 
-    for(let coard of coardDot){
-        // console.log(coard.x);
-        let chekGreenX = coard.x - centroidarry[0];
-        let chekGreenY = coard.y - centroidarry[1];
-        let chekRedX = coard.x- centroidarry[2];
-        let chekRedY = coard.y - centroidarry[3];
-        let vectorModulRed = Math.pow((Math.pow(chekRedY,2)+Math.pow(chekRedY,2)),0.5);
-        vectorModulRed = Math.abs(vectorModulRed);
-        let vectorModulGreen = Math.pow((Math.pow(chekGreenX,2)+Math.pow(chekGreenY,2)),0.5);
-        vectorModulGreen = Math.abs(vectorModulGreen);
-        if(vectorModulRed >= vectorModulGreen){
-            greenBox.push(coard);
+    if(flagLimitedCentroid == true && coardDot.length!=0){
+        n = Number(document.getElementById("myinput").value);//get input
+        for(let i = 0; i < n; i++){
+            let Centroid = {
+                coardX: Math.ceil(Math.random()*500),
+                coardY: Math.ceil(Math.random()*500),
+                collor: collorCentroid[i],
+            };
+            ctx.fillStyle = Centroid.collor;
+            ctx.beginPath();
+            ctx.fillRect(Centroid.coardX,Centroid.coardY, 20, 20);
+            ctx.fill();
+            centroidarry.push(Centroid);
         }
-        else if(vectorModulRed < vectorModulGreen) {
-            redBox.push(coard);
+        for(let j = 0; j < n; j++){
+            clusters.push([]);
         }
-    }
-    for(let i = 0; i < greenBox.length;i++){
-        ctx.fillStyle = "green";
-        ctx.beginPath();
-        ctx.arc(greenBox[i].x,greenBox[i].y,10,0,2*Math.PI);
-        ctx.stroke();
-        ctx.fill();
-    }
-    for(let i = 0; i < redBox.length;i++){
-        ctx.fillStyle = "red";
-        ctx.beginPath();
-        ctx.arc(redBox[i].x,redBox[i].y,10,0,2*Math.PI);
-        ctx.stroke();
-        ctx.fill();
-    }
-}
-document.getElementById("nextStep").onclick = avgCoard;
-console.log(greenBox);
-console.log(redBox);
-console.log(centroidarry);
-function avgCoard(){
-    let sumX = 0;
-    let sumY = 0;
-    let sredX = 0;
-    let sredY = 0;
-    for(let i = 0; i < greenBox.length; i++){
-        sumX = greenBox[i].x + sumX;
-        sumY = greenBox[i].y + sumY;
-    }
-    sredX = sumX/greenBox.length;
-    coardAll.push(sredX);
-    sredY = sumY/greenBox.length;
-    coardAll.push(sredY);
-    sumY = 0;
-    sumX = 0;
-    for(let i = 0; i < redBox.length; i++){
-        sumX = redBox[i].x + sumX;
-        sumY = redBox[i].y + sumY;
-    }
-    sredX = sumX/redBox.length;
-    coardAll.push(sredX);
-    sredY = sumY/redBox.length;
-    coardAll.push(sredY);
-    if((centroidarry[0] == coardAll[0])&&(centroidarry[1] == coardAll[1])&&(centroidarry[2] == coardAll[2])&&(centroidarry[3] == coardAll[3])){
-        alert("done");
+        flagLimitedCentroid = false;
+        floagForPoint = false;
+        return centroidarry;
     }
     else{
-        ctx.clearRect(centroidarry[0], centroidarry[1], 500, 500);
-        ctx.clearRect(centroidarry[2], centroidarry[3], 500, 500);
-        for(let i = 0; i < centroidarry.length; i++){
-            centroidarry[i] = coardAll[i];
-        }
-        ctx.fillStyle = "green";
-        ctx.beginPath();
-        ctx.fillRect(centroidarry[0], centroidarry[1], 20, 20);
-        ctx.fill();
-        ctx.fillStyle = "red";
-        ctx.beginPath();
-        ctx.fillRect(centroidarry[2], centroidarry[3], 20, 20);
-        ctx.fill();
-        greenBox = [];
-        redBox = [];
-        coardAll = [];
-        console.log(centroidarry);
-        buildCluster();
+        alert("Установите точки");
     }
+
+}
+
+document.getElementById("startButton").onclick = buildCluster;
+function buildCluster(){
+
+    if(floagForPoint == true && flagLimitedCentroid == true){
+        alert("Установите точки и центроиды");
+        return 0;
+    }   
+    else if(flagLimitedCentroid == true) {
+        alert("Установите цетроиды");
+        return 0;
+    }
+    for(let i=0; i<coardDot.length; i++){
+        let singleDotArry = []
+        for(let j = 0; j<centroidarry.length; j++){
+            let dotCoardX = coardDot[i].dotx - centroidarry[j].coardX;
+            let dotCoardY = coardDot[i].doty - centroidarry[j].coardY;
+            let vector = Math.pow((Math.pow(dotCoardX,2) + Math.pow(dotCoardY,2)),0.5);
+            singleDotArry.push(vector)
+        }
+        allvector.push(singleDotArry);
+    }
+    for(let i=0; i<allvector.length; i++){
+        let min = allvector[i][0];
+        let indexMin = 0;
+        for(let j=0 ; j<centroidarry.length; j++){
+            if(min > allvector[i][j]){
+                min = allvector[i][j];
+                indexMin = j;
+            }
+        }
+        clusters[indexMin].push(coardDot[i]);
+        ctx.fillStyle = collorCentroid[indexMin];
+        ctx.beginPath();
+        ctx.arc(coardDot[i].dotx,coardDot[i].doty,10,0,2*Math.PI);
+        ctx.stroke();
+        ctx.fill(); 
+    }
+    return clusters;
+}
+document.getElementById("nextStep").onclick = avgCoard;
+function avgCoard(){
+    for(let i = 0; i < clusters.length; i++){
+        let cheakArry = [];
+        let sumX = 0;
+        let sumY = 0;
+        let sredX = 0;
+        let sredY = 0;
+        let count = clusters[i].length
+        for(let j = 0; j < count; j++){
+            sumX = clusters[i][j].dotx + sumX;
+            sumY = clusters[i][j].doty + sumY;
+        }
+        sredX = sumX / clusters[i].length;
+        sredY = sumY / clusters[i].length;
+        cheakArry.push(sredX);
+        cheakArry.push(sredY);
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.fillRect(centroidarry[i].coardX, centroidarry[i].coardY, 20, 20);
+        ctx.fill();
+        centroidarry[i].coardX = sredX;
+        centroidarry[i].coardY = sredY;
+        ctx.fillStyle = collorCentroid[i];
+        ctx.beginPath();
+        ctx.fillRect(centroidarry[i].coardX, centroidarry[i].coardY, 20, 20);
+        ctx.fill();
+    }   
+        chekAll.push(cheakArry);
+        allvector = [];
+        for(let i=0; i<clusters.length;i++){
+            clusters[i] = [];
+        }
+        buildCluster();
+        return centroidarry;
 } 
-console.log(centroidarry);

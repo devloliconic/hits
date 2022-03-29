@@ -258,9 +258,15 @@ input:checked + .slider_round:before {
 }
 #mycanvas{
     border: 1px solid black;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
 }
 .task2-data{
     margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 30px
 }
 /*.canvas{*/
 /*    width: 500px;*/
