@@ -58,6 +58,7 @@ function addCentroid(){
             ctx.beginPath();
             ctx.fillRect(Centroid.coardX,Centroid.coardY, 20, 20);
             ctx.fill();
+            console.log(centroidarry);
             centroidarry.push(Centroid);
         }
         for(let j = 0; j < n; j++){
@@ -70,6 +71,7 @@ function addCentroid(){
     else{
         alert("Установите точки");
     }
+    
 
 }
 
@@ -115,20 +117,17 @@ function buildCluster(){
 document.getElementById("nextStep").onclick = avgCoard;
 function avgCoard(){
     for(let i = 0; i < clusters.length; i++){
-        let cheakArry = [];
         let sumX = 0;
         let sumY = 0;
         let sredX = 0;
         let sredY = 0;
-        let count = clusters[i].length
+        let count = clusters[i].length;
         for(let j = 0; j < count; j++){
             sumX = clusters[i][j].dotx + sumX;
             sumY = clusters[i][j].doty + sumY;
         }
         sredX = sumX / clusters[i].length;
         sredY = sumY / clusters[i].length;
-        cheakArry.push(sredX);
-        cheakArry.push(sredY);
         ctx.fillStyle = 'white';
         ctx.beginPath();
         ctx.fillRect(centroidarry[i].coardX, centroidarry[i].coardY, 20, 20);
@@ -140,11 +139,10 @@ function avgCoard(){
         ctx.fillRect(centroidarry[i].coardX, centroidarry[i].coardY, 20, 20);
         ctx.fill();
     }   
-        chekAll.push(cheakArry);
         allvector = [];
         for(let i=0; i<clusters.length;i++){
             clusters[i] = [];
         }
         buildCluster();
-        return centroidarry;
+
 } 
