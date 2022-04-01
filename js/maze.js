@@ -226,7 +226,8 @@ function PriorityQueue() { // input: [[x, y], priority]
     this.enqueue = function(element) {
         if (this.isEmpty()) {
             array.push(element);
-        } else {
+        }
+        else {
             let added = false
             for (let i = 0; i < array.length; i++) {
                 if (element[1] < array[i][1]) {

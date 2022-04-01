@@ -268,7 +268,14 @@ input:checked + .slider_round:before {
     justify-content: center;
     gap: 30px
 }
-/*.canvas{*/
-/*    width: 500px;*/
-/*    height: 500px;*/
-/*}*/
+
+.task3-button{
+    padding: 10px 20px;
+    background-color: black;
+    border: 1px solid black;
+    gap: 10px;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+}
