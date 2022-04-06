@@ -20,7 +20,12 @@ body{
 .header-items{
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items:flex-start;
+}
+.group{
+    font-size: 24px;
+    font-weight: 700;
+
 }
 .name-tab{
     flex-basis:620px;
@@ -57,11 +62,55 @@ main{
     width: 387px;
     font-family: 'Roboto', sans-serif;
     border: 1px solid white;
-    transition: .25s all;
+    transition: .2s;
 }
-.task:hover{
-    filter: invert();
+.task:nth-child(1):hover{
+    color: white;
     cursor: pointer;
+    background-size: cover;
+    background-image: url(../img/01.jpeg);
+    background-position: center center;
+    background-repeat:no-repeat;
+}
+.task:nth-child(2):hover{
+    color: white;
+    cursor: pointer;
+    background-image: url(../img/02.png);
+    background-size: cover;
+    background-position: center center;
+    background-repeat:no-repeat;
+}
+.task:nth-child(3):hover{
+    color: white;
+    cursor: pointer;
+    background-image: url(../img/03.jpg);
+    background-size: cover;
+    background-position: center center;
+    background-repeat:no-repeat;
+}
+.task:nth-child(4):hover{
+    color: white;
+    cursor: pointer;
+    background-image: url(../img/04.jpg);
+    background-size: cover;
+    background-position: center center;
+    background-repeat:no-repeat;
+}
+.task:nth-child(5):hover{
+    color: white;
+    cursor: pointer;
+    background-image: url(../img/05.jpg);
+    background-size: cover;
+    background-position: center center;
+    background-repeat:no-repeat;
+}
+.task:nth-child(6):hover{
+    color: white;
+    cursor: pointer;
+    background-image: url(../img/06.png);
+    background-size: cover;
+    background-position: center center;
+    background-repeat:no-repeat;
 }
 .task a{
     text-decoration: none;
@@ -263,12 +312,24 @@ input:checked + .slider_round:before {
     justify-content: center;
 }
 .task2-data{
-    margin-bottom: 10px;
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 30px
 }
-
+.task3-items{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+.task3-data{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
 .task3-button{
     padding: 10px 20px;
     background-color: black;
