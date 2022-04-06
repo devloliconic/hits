@@ -4,11 +4,10 @@ const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 
 let vertexes = [];
-let chromosomes = [];
-let size = 750;
+let size = 500;
 let lengthOfChromosome; // without start vertex in the end
 let numberOfGenerations = 100000;
-let chanceOfMutation = 40;
+let chanceOfMutation = 30;
 
 canvas.addEventListener('click', mouseClick);
 document.getElementById("clear").onclick = clearFunc;
@@ -56,32 +55,13 @@ function mouseClick(e){
     vertexes.push([clientX, clientY]);
 }
 
-function perm(firstGeneration, curDeep, end) {
-    let res = [];
-    if (curDeep === end){
-        return res;
-    }
-    for (let i = 0; i < firstGeneration.length; ++i) {
-        let rest = perm(firstGeneration.slice(0, i).concat(firstGeneration.slice(i + 1)), curDeep + 1, end);
-        if(!rest.length) {
-            res.push([firstGeneration[i]])
-        } else {
-            for(let j = 0; j < rest.length; ++j) {
-                res.push([firstGeneration[i]].concat(rest[j]))
-            }
-        }
-    }
-    return res;
-}
-
 function drawTheLines(from, to){
     for (let i = 0; i < from.length - 1; ++i){
         context.beginPath();
         let vector = [from[i + 1][0] - from[i][0] , from[i + 1][1] - from[i][1]];
         let s = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
-        context.moveTo(from[i][0] + vector[0] * 10 / s, from[i][1] + vector[1] * 10 / s);
-        //context.moveTo(bestChromosome[i][0], bestChromosome[i][1]);
 
+        context.moveTo(from[i][0] + vector[0] * 10 / s, from[i][1] + vector[1] * 10 / s);
         context.lineTo(from[i + 1][0] - vector[0] * 10 / s, from[i + 1][1] - vector[1] * 10 / s);
         context.strokeStyle = "rgb(255,255,255)";
         context.lineWidth = 2;
@@ -91,6 +71,7 @@ function drawTheLines(from, to){
         context.lineTo(from[i + 1][0] - vector[0] * 10 / s, from[i + 1][1] - vector[1] * 10 / s);
         context.strokeStyle = "rgba(243,243,243,0.34)";
         context.lineWidth = 1;
+        context.stroke()
     }
     for (let q = 0; q < to.length - 1; ++q){
         context.beginPath();
@@ -98,9 +79,30 @@ function drawTheLines(from, to){
         let s = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
         context.moveTo(to[q][0] + vector[0] * 10 / s, to[q][1] + vector[1] * 10 / s);
         context.lineTo(to[q + 1][0] - vector[0] * 10 / s, to[q + 1][1] - vector[1] * 10 / s);
-        context.strokeStyle = "rgb(250,142,142)"; //
+        context.strokeStyle = "rgb(250,142,142)";
         context.lineWidth = 1;
         context.stroke();
+    }
+
+}
+
+function drawFinishPath(bestPath, color){
+    for (let i = 0; i < bestPath.length - 1; ++i){
+        context.beginPath();
+        let vector = [bestPath[i + 1][0] - bestPath[i][0] , bestPath[i + 1][1] - bestPath[i][1]];
+        let s = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
+
+        context.moveTo(bestPath[i][0] + vector[0] * 10 / s, bestPath[i][1] + vector[1] * 10 / s);
+        context.lineTo(bestPath[i + 1][0] - vector[0] * 10 / s, bestPath[i + 1][1] - vector[1] * 10 / s);
+        context.strokeStyle = "rgb(255,255,255)";
+        context.lineWidth = 2;
+        context.stroke();
+
+        context.moveTo(bestPath[i][0] + vector[0] * 10 / s, bestPath[i][1] + vector[1] * 10 / s);
+        context.lineTo(bestPath[i + 1][0] - vector[0] * 10 / s, bestPath[i + 1][1] - vector[1] * 10 / s);
+        context.strokeStyle = color;
+        context.lineWidth = 1;
+        context.stroke()
     }
 }
 
@@ -115,9 +117,10 @@ function redrawVertexes(){
 
 function shuffle(array) {
     let a = array.slice()
-    for (let i = a.length - 2; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
+    for (let i = 0; i < vertexes.length - 1; ++i) {
+        let r1 = randomNumber(1, vertexes.length - 1);
+        let r2 = randomNumber(1, vertexes.length - 1);
+        [a[r1], a[r2]] = [a[r2], a[r1]];
     }
     return a.slice();
 }
@@ -127,23 +130,15 @@ function startPopulation(firstGeneration){
     let buffer = firstGeneration.slice();
     buffer.push(distance(buffer));
     res.push(buffer.slice());
-    //console.log(firstGeneration)
 
-    for (let i = 0; i < 80; ++i){
+    for (let i = 0; i < vertexes.length * vertexes.length; ++i){
         buffer = firstGeneration.slice();
         buffer.shift()
         buffer = shuffle(buffer)
         buffer.unshift(firstGeneration[0].slice())
         buffer.push(distance(buffer));
-        addToPopulation(res, buffer.slice());//res =
-        //console.log(buffer.slice())
-
+        res.push(buffer.slice())
     }
-
-    // console.log("!")
-    // console.log(res)
-    // console.log("!")
-    console.log(res.length)
     return res;
 }
 
@@ -178,12 +173,6 @@ function distance(chromosome){
     return ans;
 }
 
-function compare(a, b) {
-    if (a[a.length - 1] > b[a.length - 1]) return 1;
-    if (a[a.length - 1] === b[a.length - 1]) return 0;
-    if (a[a.length - 1] < b[a.length - 1]) return -1;
-}
-
 function twoRandomNumbers(min, max){
     let a = Math.floor(Math.random() * (max - min) + min);
     let b = Math.floor(Math.random() * (max - min) + min);
@@ -197,28 +186,30 @@ function randomNumber(min, max){
     return  Math.floor(Math.random() * (max - min) + min);
 }
 
-function cross(firstParent, secondParent, breakPoint){
+function cross(firstParent, secondParent){
     let child = []
-    for (let i = 0; i <= breakPoint; ++i){
+
+    let breakPoint = randomNumber(0, lengthOfChromosome);
+    for (let i = 0; i < breakPoint; ++i){
         child.push(firstParent[i]);
     }
 
-    for (let i = breakPoint + 1; i < lengthOfChromosome; ++i){
-        if (child.indexOf(secondParent[i], 0) === -1){
+    for (let i = breakPoint; i < lengthOfChromosome; ++i){
+        if (child.indexOf(secondParent[i]) === -1){
             child.push(secondParent[i]);
         }
     }
 
     if (child.length !== lengthOfChromosome){
-        for (let i = breakPoint + 1; i < lengthOfChromosome; ++i){
-            if (child.indexOf(firstParent[i], 0) === -1){
+        for (let i = breakPoint; i < lengthOfChromosome; ++i){
+            if (child.indexOf(firstParent[i]) === -1){
                 child.push(firstParent[i]);
             }
         }
     }
 
     if (Math.random() * 100 < chanceOfMutation){
-        let rand = twoRandomNumbers(1, lengthOfChromosome);
+        let rand = twoRandomNumbers(1, lengthOfChromosome - 1);
         let i = rand[0], j = rand[1];
         [child[i], child[j]] = [child[j], child[i]];
     }
@@ -231,17 +222,9 @@ function cross(firstParent, secondParent, breakPoint){
 function crossingParents(firstParentWithDistance, secondParentWithDistance){
     let firstParent = firstParentWithDistance.slice(0, firstParentWithDistance.length - 1);
     let secondParent = secondParentWithDistance.slice(0, secondParentWithDistance.length - 1);
-    let breakPoint = 1;
 
-    for (let i  = 1; i < lengthOfChromosome; ++i){
-        if (firstParent[i] !== secondParent[i]){
-            breakPoint = i;
-            break;
-        }
-    }
-
-    let firstChild = cross(firstParent, secondParent, breakPoint);
-    let secondChild = cross(secondParent, firstParent, breakPoint);
+    let firstChild = cross(firstParent, secondParent);
+    let secondChild = cross(firstParent, secondParent);
 
     if (firstChild.length > lengthOfChromosome + 2){
         console.log("First Child fail")
@@ -259,6 +242,7 @@ function crossingParents(firstParentWithDistance, secondParentWithDistance){
 
 async function geneticAlg(){
     let firstGeneration = [];
+    let end = 800;
 
     for (let i = 0; i < vertexes.length; ++i){
         firstGeneration.push(vertexes[i]);
@@ -267,130 +251,43 @@ async function geneticAlg(){
     firstGeneration.push(vertexes[0]);
 
     let population = startPopulation(firstGeneration);
-    console.log(population.length)
-
-    let curSum = 0;
-    let bestSum = 0;
+    population.sort((function (a, b) { return a[a.length - 1] - b[b.length - 1]}));
 
     let bestChromosome = population[0].slice();
 
-    for (let i = 0; i < bestChromosome.length - 1; ++i){
-        context.beginPath();
-        let vector = [bestChromosome[i + 1][0] - bestChromosome[i][0] , bestChromosome[i + 1][1] - bestChromosome[i][1]];
-        let s = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
-
-        context.moveTo(bestChromosome[i][0] + vector[0] * 10 / s, bestChromosome[i][1] + vector[1] * 10 / s);
-        context.lineTo(bestChromosome[i + 1][0] - vector[0] * 10 / s, bestChromosome[i + 1][1] - vector[1] * 10 / s);
-        context.strokeStyle = "rgb(250,142,142)";
-        context.lineWidth = 1;
-        context.stroke();
-    }
-
-    let lengthOfPopulation = population.length;
+    drawFinishPath(bestChromosome, "rgb(250,142,142)")
 
     for(let i = 0; i < numberOfGenerations; ++i){
-        let start = new Date().getTime();
 
-        let firstParent = population[randomNumber(0, Math.floor(lengthOfPopulation / 5))].slice();
-        let secondParent = population[randomNumber(0, lengthOfPopulation)].slice();
-
-        // let firstParent = [], secondParent = [];
-        //
-        // while (JSON.stringify(firstParent) === JSON.stringify(secondParent)){
-        //     let rand = twoRandomNumbers(0, population.length);
-        //     let j = rand[0], k = rand[1];
-        //     // console.log(population.length, j, k)
-        //     firstParent = population[j].slice();
-        //     secondParent = population[k].slice();
-        // }
-
-
-        // while (JSON.stringify(firstParent) === JSON.stringify(secondParent)){
-        //     console.log("!!!!!!")
-        //     secondParent = population[randomNumber(0, lengthOfPopulation / 2)].slice();
-        // }
-
-        // population[0].slice()    population[Math.floor(Math.random() * population.length)].slice()
-
-        // while (JSON.stringify(firstParent) === JSON.stringify(secondParent)){
-        //     let rand = twoRandomNumbers(0, population.length);
-        //     let j = rand[0], k = rand[1];
-        //     // console.log(population.length, j, k)
-        //     firstParent = population[j].slice();
-        //     secondParent = population[k].slice();
-        // }
-
-        // console.log(firstParent);
-        // console.log(secondParent);
-        let children = crossingParents(firstParent, secondParent);
-
-        // addToPopulation(population, children[0].slice());
-        // addToPopulation(population, children[1].slice());
-        // population.splice(population.length - 2, 2);
-
-
-        if (population.filter(i => JSON.stringify(i) === JSON.stringify(children[0])).length === 0){
-            addToPopulation(population, children[0].slice());//population =
-            population.splice(population.length - 1, 1);
-            //population.pop();
+        if (end === 0){
+            drawFinishPath(bestChromosome, "rgb(142,250,142)")
+            break;
         }
-        if (population.filter(i => JSON.stringify(i) === JSON.stringify(children[1])).length === 0){
-            addToPopulation(population, children[1].slice());//population =
-            population.splice(population.length - 1, 1);
-            //population.pop();
+
+        population = population.slice(0, vertexes.length * vertexes.length);
+        for (let j = 0; j < vertexes.length * vertexes.length; ++j){
+            let firstParent = population[randomNumber(0, population.length)].slice();
+            let secondParent = population[randomNumber(0, population.length)].slice();
+
+            let children = crossingParents(firstParent, secondParent);
+            population.push(children[0].slice())
+            population.push(children[1].slice())
         }
+
+        population.sort((function (a, b) { return a[a.length - 1] - b[b.length - 1]}));
 
         if (JSON.stringify(bestChromosome) !== JSON.stringify(population[0])){
             drawTheLines(bestChromosome, population[0])
             bestChromosome = population[0].slice();
+            end = 800;
         }
 
         if (i % 100 === 0){
             console.log(i);
+            end -= 100;
         }
-        //console.log(new Date().getTime() - start)
+
         redrawVertexes();
-        await wait(0.00001);
-
-        //console.log(population)
-        // console.log(bestChromosome)
+        await wait(0);
     }
-
-
-
-
-    // for (let i = 0; i < permutations.length; ++i){
-    //     curSum = permutations[i][permutations[i].length - 1];
-    //     if (curSum < bestSum){
-    //         context.beginPath();
-    //         for (let i = 0; i < bestChromosome.length - 1; ++i){
-    //
-    //             let vector = [bestChromosome[i + 1][0] - bestChromosome[i][0] , bestChromosome[i + 1][1] - bestChromosome[i][1]];
-    //             let s = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
-    //             context.moveTo(bestChromosome[i][0] + vector[0] * 10 / s, bestChromosome[i][1] + vector[1] * 10 / s);
-    //             //context.moveTo(bestChromosome[i][0], bestChromosome[i][1]);
-    //
-    //             context.lineTo(bestChromosome[i + 1][0] - vector[0] * 10 / s, bestChromosome[i + 1][1] - vector[1] * 10 / s);
-    //             context.strokeStyle = "rgb(0,0,0)";
-    //             context.lineWidth = 1;
-    //             context.stroke()
-    //         }
-    //         let curChromosome = permutations[i].slice();
-    //         context.beginPath();
-    //         for (let i = 0; i < curChromosome.length - 2; ++i){
-    //             let vector = [curChromosome[i + 1][0] - curChromosome[i][0] , curChromosome[i + 1][1] - curChromosome[i][1]];
-    //             let s = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
-    //             context.moveTo(curChromosome[i][0] + vector[0] * 10 / s, curChromosome[i][1] + vector[1] * 10 / s);
-    //             //context.moveTo(curChromosome[i][0], curChromosome[i][1]);
-    //
-    //             context.lineTo(curChromosome[i + 1][0] - vector[0] * 10 / s, curChromosome[i + 1][1] - vector[1] * 10 / s);
-    //             context.strokeStyle = "rgb(255,0,0)";
-    //             context.stroke()
-    //         }
-    //         bestChromosome = curChromosome
-    //         bestSum = curSum;
-    //         await wait(100);
-    //     }
-    // }
-
 }
