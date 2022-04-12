@@ -17,6 +17,13 @@ body{
     width: 1170px;
     margin: 0 auto;
 }
+.cat{
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 57px;
+    left: 600px;
+}
 .header-items{
     display: flex;
     justify-content: space-between;
@@ -126,6 +133,39 @@ main{
     height: 80px;
     margin-bottom: 40px;
 }
+.task:nth-child(1):hover .task-text{
+    color: #000000;
+}
+.task:nth-child(2):hover .task-text{
+    color: #000000;
+}
+.task:nth-child(2):hover .task-goto{
+    color: #000000;
+}
+.task:nth-child(3):hover .task-text{
+    color: #000000;
+}
+.task:nth-child(3):hover .task-goto{
+    color: #000000;
+}
+.task:nth-child(4):hover .task-text{
+    color: #000000;
+}
+.task:nth-child(4):hover .task-goto{
+    color: #000000;
+}
+.task:nth-child(5):hover .task-text{
+    color: #000000;
+}
+.task:nth-child(5):hover .task-goto{
+    color: #000000;
+}
+.task:nth-child(6):hover .task-text{
+    color: #000000;
+}
+.task:nth-child(6):hover .task-goto{
+    color: #000000;
+}
 .task-goto{
     color: white;
     text-decoration: none;
@@ -161,7 +201,8 @@ footer{
     transition: 0.3s;
 }
 .back-link:hover{
-    filter: invert();
+    -webkit-filter: invert();
+            filter: invert();
 }
 
 .main{
@@ -184,7 +225,6 @@ footer{
     background: #d3d3d3;
     outline: none;
     opacity: 0.7;
-    -webkit-transition: .2s;
     transition: opacity .2s;
 }
 
@@ -237,7 +277,6 @@ footer{
     right: 0;
     bottom: 0;
     background-color: #000000;
-    -webkit-transition: .4s;
     transition: .4s;
 }
 
@@ -249,7 +288,6 @@ footer{
     left: 4px;
     bottom: 4px;
     background-color: white;
-    -webkit-transition: .4s;
     transition: .4s;
 }
 
@@ -262,8 +300,6 @@ input:focus + .slider_round {
 }
 
 input:checked + .slider_round:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
     transform: translateX(26px);
 }
 
