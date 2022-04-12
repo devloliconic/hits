@@ -4,7 +4,7 @@ const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 
 let vertexes = [];
-let size = 500;
+let size = 750;
 let lengthOfChromosome; // without start vertex in the end
 let numberOfGenerations = 100000;
 let chanceOfMutation = 30;
@@ -53,9 +53,11 @@ function mouseClick(e){
     context.fill();
 
     vertexes.push([clientX, clientY]);
+    redrawVertexes();
 }
 
 function drawTheLines(from, to){
+    from.splice(from.length - 1, 0, from[0].slice())
     for (let i = 0; i < from.length - 1; ++i){
         context.beginPath();
         let vector = [from[i + 1][0] - from[i][0] , from[i + 1][1] - from[i][1]];
@@ -73,6 +75,7 @@ function drawTheLines(from, to){
         context.lineWidth = 1;
         context.stroke()
     }
+    to.splice(to.length - 1, 0, to[0].slice())
     for (let q = 0; q < to.length - 1; ++q){
         context.beginPath();
         let vector = [to[q + 1][0] - to[q][0] , to[q + 1][1] - to[q][1]];
@@ -87,6 +90,7 @@ function drawTheLines(from, to){
 }
 
 function drawFinishPath(bestPath, color){
+    bestPath.splice(bestPath.length - 1, 0, bestPath[0].slice())
     for (let i = 0; i < bestPath.length - 1; ++i){
         context.beginPath();
         let vector = [bestPath[i + 1][0] - bestPath[i][0] , bestPath[i + 1][1] - bestPath[i][1]];
@@ -133,9 +137,7 @@ function startPopulation(firstGeneration){
 
     for (let i = 0; i < vertexes.length * vertexes.length; ++i){
         buffer = firstGeneration.slice();
-        buffer.shift()
         buffer = shuffle(buffer)
-        buffer.unshift(firstGeneration[0].slice())
         buffer.push(distance(buffer));
         res.push(buffer.slice())
     }
@@ -170,6 +172,7 @@ function distance(chromosome){
     for (let i = 0; i < chromosome.length - 1; ++i){
         ans += Math.sqrt(Math.pow(chromosome[i][0] - chromosome[i + 1][0], 2) + Math.pow(chromosome[i][1] - chromosome[i + 1][1], 2));
     }
+    ans += Math.sqrt(Math.pow(chromosome[chromosome.length - 1][0] - chromosome[0][0], 2) + Math.pow(chromosome[chromosome.length - 1][1] - chromosome[0][1], 2));
     return ans;
 }
 
@@ -187,91 +190,67 @@ function randomNumber(min, max){
 }
 
 function cross(firstParent, secondParent){
-    let child = []
+    let child = [];
+    let index1 = randomNumber(0, firstParent.length);
+    let index2 = randomNumber(index1 + 1, firstParent.length);
+    child = firstParent.slice(index1, index2 + 1);
 
-    let breakPoint = randomNumber(0, lengthOfChromosome);
-    for (let i = 0; i < breakPoint; ++i){
-        child.push(firstParent[i]);
-    }
-
-    for (let i = breakPoint; i < lengthOfChromosome; ++i){
-        if (child.indexOf(secondParent[i]) === -1){
-            child.push(secondParent[i]);
-        }
-    }
-
-    if (child.length !== lengthOfChromosome){
-        for (let i = breakPoint; i < lengthOfChromosome; ++i){
-            if (child.indexOf(firstParent[i]) === -1){
-                child.push(firstParent[i]);
-            }
+    for (let num of secondParent) {
+        if (!child.includes(num)) {
+            child.push(num);
         }
     }
 
     if (Math.random() * 100 < chanceOfMutation){
-        let rand = twoRandomNumbers(1, lengthOfChromosome - 1);
+        let rand = twoRandomNumbers(1, lengthOfChromosome);
         let i = rand[0], j = rand[1];
         [child[i], child[j]] = [child[j], child[i]];
     }
 
-    child.push(firstParent[0]);
-    child.push(distance(child));
     return child;
 }
 
-function crossingParents(firstParentWithDistance, secondParentWithDistance){
-    let firstParent = firstParentWithDistance.slice(0, firstParentWithDistance.length - 1);
-    let secondParent = secondParentWithDistance.slice(0, secondParentWithDistance.length - 1);
-
+function crossingParents(firstParent, secondParent){
     let firstChild = cross(firstParent, secondParent);
     let secondChild = cross(firstParent, secondParent);
 
-    if (firstChild.length > lengthOfChromosome + 2){
-        console.log("First Child fail")
-        console.log(firstChild);
-        console.log(firstParent)
-    }
-    if (secondChild.length > lengthOfChromosome + 2){
-        console.log("Second Child fail")
-        console.log(secondChild);
-        console.log(secondParent)
-    }
-
+    firstChild.push(distance(firstChild.slice()))
+    secondChild.push(distance(secondChild.slice()))
     return [firstChild, secondChild];
 }
 
 async function geneticAlg(){
     let firstGeneration = [];
-    let end = 800;
+    let end = 500;
 
     for (let i = 0; i < vertexes.length; ++i){
         firstGeneration.push(vertexes[i]);
     }
     lengthOfChromosome = firstGeneration.length;
-    firstGeneration.push(vertexes[0]);
 
     let population = startPopulation(firstGeneration);
     population.sort((function (a, b) { return a[a.length - 1] - b[b.length - 1]}));
 
     let bestChromosome = population[0].slice();
-
     drawFinishPath(bestChromosome, "rgb(250,142,142)")
 
     for(let i = 0; i < numberOfGenerations; ++i){
-
         if (end === 0){
             drawFinishPath(bestChromosome, "rgb(142,250,142)")
             break;
         }
 
         population = population.slice(0, vertexes.length * vertexes.length);
-        for (let j = 0; j < vertexes.length * vertexes.length; ++j){
-            let firstParent = population[randomNumber(0, population.length)].slice();
-            let secondParent = population[randomNumber(0, population.length)].slice();
 
-            let children = crossingParents(firstParent, secondParent);
-            population.push(children[0].slice())
-            population.push(children[1].slice())
+        for (let j = 0; j < vertexes.length * vertexes.length; ++j){
+            let index1 = randomNumber(0, population.length);
+            let index2 = randomNumber(0, population.length);
+            let firstParent = population[index1].slice(0, population[index1].length - 1);
+            let secondParent = population[index2].slice(0, population[index2].length - 1);
+
+            let child = crossingParents(firstParent, secondParent);
+            population.push(child[0].slice())
+            population.push(child[1].slice())
         }
 
         population.sort((function (a, b) { return a[a.length - 1] - b[b.length - 1]}));
@@ -279,7 +258,7 @@ async function geneticAlg(){
         if (JSON.stringify(bestChromosome) !== JSON.stringify(population[0])){
             drawTheLines(bestChromosome, population[0])
             bestChromosome = population[0].slice();
-            end = 800;
+            end = 500;
         }
 
         if (i % 100 === 0){
