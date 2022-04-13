@@ -49,9 +49,11 @@ function addCentroid(){
     if(flagLimitedCentroid == true && coardDot.length!=0){
         n = Number(document.getElementById("myinput").value);//get input
         for(let i = 0; i < n; i++){
+            let randomdot = Math.floor(Math.random() * coardDot.length);
+            console.log(randomdot);
             let Centroid = {
-                coardX: Math.ceil(Math.random()*500),
-                coardY: Math.ceil(Math.random()*500),
+                coardX: coardDot[randomdot].dotx,
+                coardY: coardDot[randomdot].doty,
                 collor: collorCentroid[i],
             };
             ctx.fillStyle = Centroid.collor;
