@@ -87,7 +87,7 @@ function buildCluster(){
         return 0;
     }
     for(let i=0; i<coardDot.length; i++){
-        let singleDotArry = []
+        let singleDotArry = [];
         for(let j = 0; j<centroidarry.length; j++){
             let dotCoardX = coardDot[i].dotx - centroidarry[j].coardX;
             let dotCoardY = coardDot[i].doty - centroidarry[j].coardY;
@@ -126,23 +126,46 @@ function avgCoard(){
             sumX = clusters[i][j].dotx + sumX;
             sumY = clusters[i][j].doty + sumY;
         }
-        sredX = sumX / clusters[i].length;
-        sredY = sumY / clusters[i].length;
-        ctx.fillStyle = 'white';
-        ctx.beginPath();
-        ctx.fillRect(centroidarry[i].coardX, centroidarry[i].coardY, 20, 20);
-        ctx.fill();
-        centroidarry[i].coardX = sredX;
-        centroidarry[i].coardY = sredY;
-        ctx.fillStyle = collorCentroid[i];
-        ctx.beginPath();
-        ctx.fillRect(centroidarry[i].coardX, centroidarry[i].coardY, 20, 20);
-        ctx.fill();
-    }   
-        allvector = [];
-        for(let i=0; i<clusters.length;i++){
-            clusters[i] = [];
+        if(count!=0){
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.fillRect(centroidarry[i].coardX, centroidarry[i].coardY, 20, 20);
+            ctx.fill();
+            sredX = sumX / clusters[i].length;
+            sredY = sumY / clusters[i].length;
+            centroidarry[i].coardX = sredX ;
+            centroidarry[i].coardY = sredY;
+            ctx.fillStyle = centroidarry[i].collor;
+            ctx.beginPath();
+            ctx.fillRect(sredX, sredY, 20, 20);
+            ctx.fill();
         }
-        buildCluster();
+        // else if(count==0){
+        //     sredX = centroidarry[i].coardX;
+        //     sredY = centroidarry[i].coardY;
+        //     // centroidarry[i].coardX = sredX ;
+        //     // centroidarry[i].coardY = sredY;
+        //     // ctx.fillStyle = centroidarry[i].collor;
+        //     // ctx.beginPath();
+        //     // ctx.fillRect(sredX, sredY, 20, 20);
+        //     // ctx.fill();
+        // }
+        
+        
+
+        // centroidarry[i].coardX = sredX ;
+        // centroidarry[i].coardY = sredY;
+        // ctx.fillStyle = centroidarry[i].collor;
+        // ctx.beginPath();
+        // ctx.fillRect(sredX, sredY, 20, 20);
+        // ctx.fill();
+
+    }   
+    allvector = [];
+    singleDotArry = [];
+    for(let i=0; i<clusters.length;i++){
+        clusters[i] = [];
+    }
+    buildCluster();
 
 } 
