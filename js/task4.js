@@ -147,10 +147,6 @@ function allDistanceForPath(path_idx){
     return dist;
 }
 
-function randomNumber(min, max){
-    return  Math.floor(Math.random() * (max - min) + min);
-}
-
 function addToPopulation(allWays, path) {
     if (!allWays.length) {
         allWays.push(path.slice());
