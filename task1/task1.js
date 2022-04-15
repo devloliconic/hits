@@ -257,10 +257,10 @@ function PriorityQueue() { // input: [[x, y], priority]
 
 function heuristicFunc(current, end, type){
     if (type){
-        return 2 * Math.sqrt(Math.pow(current[0] - end[0], 2) + Math.pow(current[1] - end[1], 2));
+        return 2 * (Math.sqrt(Math.pow(current[0] - end[0], 2) + Math.pow(current[1] - end[1], 2)));
     }
     else{
-        return 2 * Math.abs(current[0] - end[0]) + Math.abs(current[1] - end[1]);
+        return 2 * (Math.abs(current[0] - end[0]) + Math.abs(current[1] - end[1]));
     }
 }
 
