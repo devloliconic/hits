@@ -22,7 +22,7 @@ body{
     height: 100px;
     position: absolute;
     top: 57px;
-    left: 600px;
+    left: 50vw;
 }
 .header-items{
     display: flex;
@@ -373,4 +373,25 @@ input:checked + .slider_round:before {
     font-size: 15px;
     cursor: pointer;
     transition: 0.2s;
+}
+@media(max-width: 1250px){
+    .container{
+        max-width: 1000px;
+    }
+    .flex-block-task{
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+@media(max-width: 1050px){
+    .container{
+        max-width: 890px;
+    }
+}
+@media(max-width: 700px){
+    .container{
+        max-width: 600px;
+    }
+    .flex-block-task{
+        grid-template-columns: repeat(1,1fr);
+    }
 }

@@ -7,8 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/main.css">
     <title>Document</title>
 </head>
 <body>
@@ -16,21 +16,23 @@
         <div class="header">
             <div class="container">
                 <div class="header-items-task1">
-                    <a href="https://hits.tsu.ru/"><img class="logo" src="img/logo.svg" alt="sd"></a>
-                    <a class="back-link"href="index.html">Вернуться назад</a>
+                    <a href="https://hits.tsu.ru/"><img class="logo" src="../img/logo.svg" alt="sd"></a>
+                    <a class="back-link" href="../index.html">Вернуться назад</a>
                 </div>
             </div>
         </div>
     </header>
     <main>
         <div class="container">
-            <div class="task2-items">
-                <div class="task2-data">
-                    <canvas class="canvas"></canvas>
-                    <script src="js/task6.js"></script>
+            <div class="task3-items">
+                <div class="task3-data">
+                    <button id="start" class ="task3-button">Running the algorithm</button>
+                    <button id="clear" class ="task3-button">Clear</button>
                 </div>
+                <canvas class="canvas" width="750" height="750"></canvas>
             </div>
         </div>
     </main>
+    <script src="task3.js"></script>
 </body>
 </html>
