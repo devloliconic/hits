@@ -1,9 +1,9 @@
 var canvas = document.getElementById('mycanvas');
 var ctx = canvas.getContext('2d');
 let coardDot = [];
-let centroidarry = [];
+let centroidArry = [];
 let coardAll = [];
-let allvector = [];
+let allVector = [];
 let clusters = [];
 const collorCentroid = ['red', 'green', 'gold', 'blue', 'DimGray'];
 
@@ -19,7 +19,7 @@ slider.oninput = function() {
 
 
 
-canvas.onclick = function (event) {
+canvas.onclick = function (event) { //get dot
     if (floagForPoint === true){
         let x = event.offsetX;
         let y = event.offsetY;
@@ -44,11 +44,11 @@ function clearFunc(){
     location.reload();
 }
 let floagForPoint = true;
-let flagLimitedCentroid = true // limited for 
+let flagLimitedCentroid = true 
 function addCentroid(){
     if(flagLimitedCentroid == true && coardDot.length!=0){
-        n = Number(document.getElementById("myinput").value);//get input
-        for(let i = 0; i < n; i++){
+        n = Number(document.getElementById("myinput").value);//get input dot_count 
+        for(let i = 0; i < n; i++){ // random centroid generator
             let randomdot = Math.floor(Math.random() * coardDot.length);
             console.log(randomdot);
             let Centroid = {
@@ -60,15 +60,15 @@ function addCentroid(){
             ctx.beginPath();
             ctx.fillRect(Centroid.coardX,Centroid.coardY, 20, 20);
             ctx.fill();
-            console.log(centroidarry);
-            centroidarry.push(Centroid);
+            console.log(centroidArry);
+            centroidArry.push(Centroid);
         }
-        for(let j = 0; j < n; j++){
+        for(let j = 0; j < n; j++){ // generator mas for single centroid
             clusters.push([]);
         }
         flagLimitedCentroid = false;
         floagForPoint = false;
-        return centroidarry;
+        return centroidArry;
     }
     else{
         alert("Установите точки");
@@ -78,7 +78,7 @@ function addCentroid(){
 }
 
 document.getElementById("startButton").onclick = buildCluster;
-function buildCluster(){
+function buildCluster(){ //main func for clusters
 
     if(floagForPoint == true && flagLimitedCentroid == true){
         alert("Установите точки и центроиды");
@@ -88,22 +88,22 @@ function buildCluster(){
         alert("Установите цетроиды");
         return 0;
     }
-    for(let i=0; i<coardDot.length; i++){
+    for(let i=0; i<coardDot.length; i++){ // calculating avg coard for i clusters
         let singleDotArry = [];
-        for(let j = 0; j<centroidarry.length; j++){
-            let dotCoardX = coardDot[i].dotx - centroidarry[j].coardX;
-            let dotCoardY = coardDot[i].doty - centroidarry[j].coardY;
+        for(let j = 0; j<centroidArry.length; j++){
+            let dotCoardX = coardDot[i].dotx - centroidArry[j].coardX;
+            let dotCoardY = coardDot[i].doty - centroidArry[j].coardY;
             let vector = Math.pow((Math.pow(dotCoardX,2) + Math.pow(dotCoardY,2)),0.5);
             singleDotArry.push(vector)
         }
-        allvector.push(singleDotArry);
+        allVector.push(singleDotArry);
     }
-    for(let i=0; i<allvector.length; i++){
-        let min = allvector[i][0];
+    for(let i=0; i<allVector.length; i++){
+        let min = allVector[i][0];
         let indexMin = 0;
-        for(let j=0 ; j<centroidarry.length; j++){
-            if(min > allvector[i][j]){
-                min = allvector[i][j];
+        for(let j=0 ; j<centroidArry.length; j++){
+            if(min > allVector[i][j]){
+                min = allVector[i][j];
                 indexMin = j;
             }
         }
@@ -117,7 +117,7 @@ function buildCluster(){
     return clusters;
 }
 document.getElementById("nextStep").onclick = avgCoard;
-function avgCoard(){
+function avgCoard(){ //offset centroids
     for(let i = 0; i < clusters.length; i++){
         let sumX = 0;
         let sumY = 0;
@@ -131,23 +131,23 @@ function avgCoard(){
         if(count!=0){
             ctx.fillStyle = 'white';
             ctx.beginPath();
-            ctx.fillRect(centroidarry[i].coardX, centroidarry[i].coardY, 20, 20);
+            ctx.fillRect(centroidArry[i].coardX, centroidArry[i].coardY, 20, 20);
             ctx.fill();
             sredX = sumX / clusters[i].length;
             sredY = sumY / clusters[i].length;
-            centroidarry[i].coardX = sredX ;
-            centroidarry[i].coardY = sredY;
-            ctx.fillStyle = centroidarry[i].collor;
+            centroidArry[i].coardX = sredX ;
+            centroidArry[i].coardY = sredY;
+            ctx.fillStyle = centroidArry[i].collor;
             ctx.beginPath();
             ctx.fillRect(sredX, sredY, 20, 20);
             ctx.fill();
         }
         // else if(count==0){
-        //     sredX = centroidarry[i].coardX;
-        //     sredY = centroidarry[i].coardY;
-        //     // centroidarry[i].coardX = sredX ;
-        //     // centroidarry[i].coardY = sredY;
-        //     // ctx.fillStyle = centroidarry[i].collor;
+        //     sredX = centroidArry[i].coardX;
+        //     sredY = centroidArry[i].coardY;
+        //     // centroidArry[i].coardX = sredX ;
+        //     // centroidArry[i].coardY = sredY;
+        //     // ctx.fillStyle = centroidArry[i].collor;
         //     // ctx.beginPath();
         //     // ctx.fillRect(sredX, sredY, 20, 20);
         //     // ctx.fill();
@@ -155,15 +155,15 @@ function avgCoard(){
         
         
 
-        // centroidarry[i].coardX = sredX ;
-        // centroidarry[i].coardY = sredY;
-        // ctx.fillStyle = centroidarry[i].collor;
+        // centroidArry[i].coardX = sredX ;
+        // centroidArry[i].coardY = sredY;
+        // ctx.fillStyle = centroidArry[i].collor;
         // ctx.beginPath();
         // ctx.fillRect(sredX, sredY, 20, 20);
         // ctx.fill();
 
     }   
-    allvector = [];
+    allVector = [];
     singleDotArry = [];
     for(let i=0; i<clusters.length;i++){
         clusters[i] = [];
