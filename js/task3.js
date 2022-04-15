@@ -90,8 +90,10 @@ function drawTheLines(from, to){
 }
 
 function drawFinishPath(bestPath, color){
+    console.log(bestPath.slice())
     bestPath.splice(bestPath.length - 1, 0, bestPath[0].slice())
-    for (let i = 0; i < bestPath.length - 1; ++i){
+    console.log(bestPath.slice())
+    for (let i = 0; i < bestPath.length - 2; ++i){
         context.beginPath();
         let vector = [bestPath[i + 1][0] - bestPath[i][0] , bestPath[i + 1][1] - bestPath[i][1]];
         let s = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
