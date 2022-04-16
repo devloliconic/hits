@@ -24,6 +24,17 @@ body{
     top: 57px;
     left: 50vw;
 }
+.cat:hover + .catsound{
+    
+    display: block;
+}
+.catsound{
+    display: none;
+    position: absolute;
+    top: 31px;
+    left: 50vw;
+    text-transform: uppercase;
+}
 .header-items{
     display: flex;
     justify-content: space-between;
@@ -65,57 +76,37 @@ main{
     align-items: center;
     background-color: black;
     aspect-ratio: 1;
+    background-size: cover;
     font-family: 'Roboto', sans-serif;
     border: 1px solid white;
     transition: .2s;
+    background-position: center center;
+    background-repeat:no-repeat;
+    cursor: pointer;
 }
 .task:nth-child(1):hover{
     color: white;
-    cursor: pointer;
-    background-size: cover;
     background-image: url(../img/01.jpeg);
-    background-position: center center;
-    background-repeat:no-repeat;
 }
 .task:nth-child(2):hover{
     color: white;
-    cursor: pointer;
     background-image: url(../img/02.png);
-    background-size: cover;
-    background-position: center center;
-    background-repeat:no-repeat;
 }
 .task:nth-child(3):hover{
     color: white;
-    cursor: pointer;
     background-image: url(../img/03.jpg);
-    background-size: cover;
-    background-position: center center;
-    background-repeat:no-repeat;
 }
 .task:nth-child(4):hover{
     color: white;
-    cursor: pointer;
     background-image: url(../img/04.jpg);
-    background-size: cover;
-    background-position: center center;
-    background-repeat:no-repeat;
 }
 .task:nth-child(5):hover{
     color: white;
-    cursor: pointer;
     background-image: url(../img/05.jpg);
-    background-size: cover;
-    background-position: center center;
-    background-repeat:no-repeat;
 }
 .task:nth-child(6):hover{
     color: white;
-    cursor: pointer;
     background-image: url(../img/06.png);
-    background-size: cover;
-    background-position: center center;
-    background-repeat:no-repeat;
 }
 .task a{
     text-decoration: none;
@@ -131,10 +122,10 @@ main{
     height: 80px;
     margin-bottom: 40px;
 }
-.task:nth-child(1):hover .task-text{
+.task:hover .task-text{
     color: #000000;
 }
-.task:nth-child(2):hover .task-text{
+/* .task:nth-child(2):hover .task-text{
     color: #000000;
 }
 .task:nth-child(2):hover .task-goto{
@@ -163,7 +154,7 @@ main{
 }
 .task:nth-child(6):hover .task-goto{
     color: #000000;
-}
+} */
 .task-goto{
     text-align: center;
     color: white;
@@ -314,6 +305,7 @@ input:checked + .slider_round:before {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
     gap: 20px;
     margin-bottom: 50px;
 }
@@ -387,9 +379,9 @@ input:checked + .slider_round:before {
         max-width: 890px;
     }
 }
-@media(max-width: 700px){
+@media(max-width: 930px){
     .container{
-        max-width: 600px;
+        max-width: 700px;
     }
     .flex-block-task{
         grid-template-columns: repeat(1,1fr);

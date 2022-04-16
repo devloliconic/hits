@@ -46,7 +46,7 @@ function clearFunc(){
 let floagForPoint = true;
 let flagLimitedCentroid = true 
 function addCentroid(){
-    if(flagLimitedCentroid == true && coardDot.length!=0){
+    if(flagLimitedCentroid === true && coardDot.length !== 0){
         n = Number(document.getElementById("myinput").value);//get input dot_count 
         for(let i = 0; i < n; i++){ // random centroid generator
             let randomdot = Math.floor(Math.random() * coardDot.length);
@@ -80,11 +80,11 @@ function addCentroid(){
 document.getElementById("startButton").onclick = buildCluster;
 function buildCluster(){ //main func for clusters
 
-    if(floagForPoint == true && flagLimitedCentroid == true){
+    if(floagForPoint === true && flagLimitedCentroid === true){
         alert("Установите точки и центроиды");
         return 0;
     }   
-    else if(flagLimitedCentroid == true) {
+    else if(flagLimitedCentroid === true) {
         alert("Установите цетроиды");
         return 0;
     }
@@ -128,7 +128,7 @@ function avgCoard(){ //offset centroids
             sumX = clusters[i][j].dotx + sumX;
             sumY = clusters[i][j].doty + sumY;
         }
-        if(count!=0){
+        if(count!==0){
             ctx.fillStyle = 'white';
             ctx.beginPath();
             ctx.fillRect(centroidArry[i].coardX, centroidArry[i].coardY, 20, 20);
