@@ -46,8 +46,8 @@ function clearFunc(){
 let floagForPoint = true;
 let flagLimitedCentroid = true 
 function addCentroid(){
-    if(flagLimitedCentroid === true && coardDot.length !== 0){
-        n = Number(document.getElementById("myinput").value);//get input dot_count 
+    let n = Number(document.getElementById("myinput").value);//get input dot_count 
+    if(flagLimitedCentroid === true && coardDot.length !== 0 && n <= coardDot.length){
         for(let i = 0; i < n; i++){ // random centroid generator
             let randomdot = Math.floor(Math.random() * coardDot.length);
             console.log(randomdot);
@@ -70,7 +70,7 @@ function addCentroid(){
         floagForPoint = false;
         return centroidArry;
     }
-    else{
+    else if(flagLimitedCentroid === true && coardDot.length !== 0){
         alert("Установите точки");
     }
     
